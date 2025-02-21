@@ -42,20 +42,8 @@ const Operation = forwardRef<HTMLDivElement, OperationProps>(({
         <div className='flex items-center space-x-1'>
           {fileConfig?.enabled && <FileUploaderInChatInput fileConfig={fileConfig} />}
         </div>
-        {/* {
-            speechToTextConfig?.enabled && (
-
-              <Button
-              className='mx-2 px-2 flex items-center gap-2 '
-              variant='primary'
-              onClick={onShowVoiceInput}
-              >
-              <RiMicLine className='w-5 h-5 text-white' />
-              </Button>
-            )
-          } */}
         <Button
-          className='px-2 w-8 !min-h-[34px]'
+          className='px-2 w-9 !min-h-[34px]'
           variant='primary'
           onClick={onSend}
           style={
@@ -66,7 +54,7 @@ const Operation = forwardRef<HTMLDivElement, OperationProps>(({
               : {}
           }
         >
-          <RiSendPlane2Fill className='w-4 h-4' />
+          <RiSendPlane2Fill className='w-5 h-5' />
         </Button>
       </div>
     </div>

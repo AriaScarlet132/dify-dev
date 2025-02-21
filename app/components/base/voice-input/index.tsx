@@ -4,6 +4,7 @@ import { useParams, usePathname } from 'next/navigation'
 import {
   RiCloseLine,
   RiLoader2Line,
+  RiStopCircleLine
 } from '@remixicon/react'
 import Button from '@/app/components/base/button'
 import Recorder from 'js-audio-recorder'
@@ -138,6 +139,7 @@ const VoiceInput = forwardRef(({
     if (canvas) {
       const { width: cssWidth, height: cssHeight } = canvas.getBoundingClientRect()
 
+      console.log(dpr,cssWidth)
       canvas.width = dpr * cssWidth
       canvas.height = dpr * cssHeight
       canvasRef.current = canvas
@@ -167,54 +169,56 @@ const VoiceInput = forwardRef(({
 
   return (
     <div className={cn(s.wrapper, 'absolute inset-0 rounded-xl overflow-hidden mx-2')}>
-      <div className='absolute inset-[1.5px] pl-3 flex items-center  bg-primary-25 rounded-[10.5px] overflow-hidden'>
-        <canvas id='voice-input-record' className='absolute left-0 bottom-0 w-full ' />
-        {
-          startConvert && <RiLoader2Line className='animate-spin mr-2 w-6 h-6 text-primary-700' />
-        }
-        <div className='grow'>
-          {
-            startRecord && (
-              <div className='text-sm text-gray-500'>
-                {t('common.voiceInput.speaking')}
-              </div>
-            )
-          }
-          {
-            startConvert && (
-              <div className={cn(s.convert, 'text-sm')}>
-                {t('common.voiceInput.converting')}
-              </div>
-            )
-          }
-        </div>
-
-        {
-          startConvert && (
-            <div
-              className='flex justify-center items-center mr-1 w-8 h-8 hover:bg-gray-200 rounded-lg  cursor-pointer'
-              onClick={onCancel}
-            >
-              <RiCloseLine className='w-6 h-6 text-gray-500' />
+      <div className='absolute inset-[1.5px] pl-3  bg-primary-25 rounded-[10.5px] overflow-hidden'>
+        <div className="flex items-center w-full relative h-full">
+            {
+              startConvert && <RiLoader2Line className='animate-spin mr-2 w-6 h-6 text-primary-700' />
+            }
+            <div className='grow z-20'>
+              {
+                startRecord && (
+                  <div className='text-sm text-gray-500 '>
+                    {t('common.voiceInput.speaking')}
+                  </div>
+                )
+              }
+              {
+                startConvert && (
+                  <div className={cn(s.convert, 'text-sm')}>
+                    {t('common.voiceInput.converting')}
+                  </div>
+                )
+              }
             </div>
-          )
-        }
 
-        <div className={`w-[45px] pl-1 text-xs font-medium ${originDuration > 500 ? 'text-[#F04438]' : 'text-gray-700'}`}>{`0${minutes.toFixed(0)}:${seconds >= 10 ? seconds : `0${seconds}`}`}</div>
+            {
+              startConvert && (
+                <div
+                  className='flex justify-center items-center mr-1 w-8 h-8 z-20 hover:bg-gray-200 rounded-lg  cursor-pointer'
+                  onClick={onCancel}
+                >
+                  <RiCloseLine className='w-6 h-6 text-gray-500' />
+                </div>
+              )
+            }
 
-        {
-          startRecord && (
+            <div className={`w-[45px] pl-1 text-xs z-20 font-medium ${originDuration > 500 ? 'text-[#F04438]' : 'text-gray-700'}`}>{`0${minutes.toFixed(0)}:${seconds >= 10 ? seconds : `0${seconds}`}`}</div>
 
-            <Button
-              className='mx-2 px-2 z-20 flex items-center'
-              variant='primary'
-              onClick={handleStopRecorder}
-            >
-              <RiCloseLine className='w-6 h-6 text-white' />
-              结束
-            </Button>
-          )
-        }
+            {
+              startRecord && (
+
+                <Button
+                  className='mx-2 px-2 z-20 flex items-center gap-1'
+                  variant='primary'
+                  onClick={handleStopRecorder}
+                >
+                  <RiStopCircleLine className='w-5 h-5 text-white ' />
+                  <span>完成</span>
+                </Button>
+              )
+            }
+            <canvas id='voice-input-record' className='absolute top-0 bottom-0 right-0 left-0  w-full h-full z-0' />
+         </div>
       </div>
     </div>
   )
