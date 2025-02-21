@@ -162,7 +162,7 @@ const ChatInputArea = ({
         )}
       >
 
-        <div className='relative pl-[9px] flex max-h-[158px] min-h-[44px] overflow-x-hidden overflow-y-auto flex-1'>
+        <div className='relative pl-[9px] flex max-h-[158px] min-h-[44px] pb-[5px] items-end overflow-x-hidden overflow-y-auto flex-1'>
           <FileListInChatInput fileConfig={visionConfig!} />
           <div
             ref={wrapperRef}
@@ -189,7 +189,7 @@ const ChatInputArea = ({
               <Textarea
                 ref={textareaRef}
                 className={cn(
-                  'p-1 w-full leading-6 body-lg-regular text-text-tertiary outline-none bg-gray-100  rounded  overflow-hidden border border-gary-200',
+                  'p-1 w-full leading-6 body-lg-regular text-text-tertiary outline-none bg-gray-100  rounded-lg  overflow-hidden border border-gary-200',
                 )}
                 placeholder={t('common.chat.inputPlaceholder') || ''}
                 autoFocus
@@ -222,7 +222,7 @@ const ChatInputArea = ({
           }
           {
             isMultipleLine && (
-              <div className='pr-[9px] flex items-end justify-center'>{operation}</div>
+              <div className='pr-[9px] h-full flex items-end justify-center'>{operation}</div>
             )
           }
         </div>
