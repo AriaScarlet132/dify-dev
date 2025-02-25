@@ -18,21 +18,9 @@ const Form = () => {
     handleStartChat,
   } = useEmbeddedChatbotContext()
 
-  const url = window.location.href
-  const params: Record<string, string> = {}
-  url.split('?')[1]?.split('&').forEach((item) => {
-    const keyVal = item.split('=')
-    params[keyVal[0]] = keyVal[1]
-  })
-
-  Object.keys(params).forEach((key) => {
-    console.log('[Rendering Form]:', key, params[key])
-    newConversationInputs[key] = params[key]
-  })
-
   useEffect(() => {
     handleStartChat()
-  }, [])
+  })
 
   const handleFormChange = useCallback((variable: string, value: any) => {
     handleNewConversationInputsChange({
