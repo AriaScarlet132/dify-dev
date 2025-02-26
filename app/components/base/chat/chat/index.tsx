@@ -206,10 +206,10 @@ const Chat: FC<ChatProps> = ({
       onAnnotationRemoved={onAnnotationRemoved}
       onFeedback={onFeedback}
     >
-      <div className='relative h-full'>
+      <div className='relative h-full '>
         <div
           ref={chatContainerRef}
-          className={cn('relative h-full overflow-y-auto overflow-x-hidden', chatContainerClassName)}
+          className={cn('relative h-full pt-8 overflow-y-auto overflow-x-hidden', chatContainerClassName)}
         >
           {chatNode}
           <div

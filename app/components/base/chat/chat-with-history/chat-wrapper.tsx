@@ -17,7 +17,6 @@ import {
   stopChatMessageResponding,
 } from '@/service/share'
 import AnswerIcon from '@/app/components/base/answer-icon'
-
 const ChatWrapper = () => {
   const {
     appParams,
@@ -111,10 +110,10 @@ const ChatWrapper = () => {
     if (inputsForms.length) {
       return (
         <>
-          <Header
+          {/* <Header
             isMobile={isMobile}
             title={currentConversationItem?.name || ''}
-          />
+          /> */}
           {
             !currentConversationId && (
               <div className={`mx-auto w-full max-w-[720px] ${isMobile && 'px-4'}`}>
@@ -122,7 +121,6 @@ const ChatWrapper = () => {
                 <ConfigPanel />
                 <div
                   className='my-6 h-[1px]'
-                  style={{ background: 'linear-gradient(90deg, rgba(242, 244, 247, 0.00) 0%, #F2F4F7 49.17%, rgba(242, 244, 247, 0.00) 100%)' }}
                 />
               </div>
             )
@@ -130,13 +128,13 @@ const ChatWrapper = () => {
         </>
       )
     }
-
-    return (
-      <Header
-        isMobile={isMobile}
-        title={currentConversationItem?.name || ''}
-      />
-    )
+    
+    // return (
+    //   <Header
+    //     isMobile={isMobile}
+    //     title={currentConversationItem?.name || ''}
+    //   />
+    // )
   }, [
     currentConversationId,
     inputsForms,
@@ -155,7 +153,7 @@ const ChatWrapper = () => {
 
   return (
     <div
-      className='h-full bg-chatbot-bg overflow-hidden'
+      className='h-full bg-chatbot-bg overflow-hidden '
     >
       <Chat
         appData={appData}

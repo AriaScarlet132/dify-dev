@@ -11,7 +11,7 @@ import { CssTransform } from '../embedded-chatbot/theme/utils'
 import { User } from '@/app/components/base/icons/src/public/avatar'
 import { Markdown } from '@/app/components/base/markdown'
 import { FileList } from '@/app/components/base/file-uploader'
-
+import "./question.css"
 interface QuestionProps {
   item: ChatItem
   questionIcon?: ReactNode
@@ -29,9 +29,9 @@ const Question: FC<QuestionProps> = ({
 
   return (
     <div className='flex justify-end mb-2 last:mb-0 pl-14'>
-      <div className='group relative mr-4 max-w-full'>
+      <div className='group relative mr-3 max-w-full'>
         <div
-          className='px-4 py-3 bg-[#D1E9FF]/50 rounded-2xl text-sm text-gray-900'
+          className='px-4 py-3   question-chatting shadow-sm text-sm'
           style={theme?.chatBubbleColorStyle ? CssTransform(theme.chatBubbleColorStyle) : {}}
         >
           {

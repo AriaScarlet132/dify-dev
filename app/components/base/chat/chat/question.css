@@ -1,0 +1,9 @@
+.question-chatting{
+    color: #fff;
+    background: linear-gradient(91deg, #2B96FF 0%, #1c64f2 100%);
+    border-radius: 12px 12px 0px 12px;
+}
+
+.question-chatting .markdown-body{
+    color: #fff;
+}

@@ -244,7 +244,7 @@ export function Markdown(props: { content: string; className?: string }) {
     preprocessLaTeX,
   ])(props.content)
   return (
-    <div className={cn(props.className, 'markdown-body')}>
+    <div className={cn(props.className, 'markdown-body')} style={{ fontSize: '15px' }}>
       <ReactMarkdown
         remarkPlugins={[
           RemarkGfm,

@@ -23,6 +23,7 @@ import ConfigPanel from '@/app/components/base/chat/embedded-chatbot/config-pane
 import ChatWrapper from '@/app/components/base/chat/embedded-chatbot/chat-wrapper'
 import Tooltip from '@/app/components/base/tooltip'
 
+
 const Chatbot = () => {
   const { t } = useTranslation()
   const {
@@ -66,15 +67,15 @@ const Chatbot = () => {
   }
   return (
     <div>
-      <Header
+      {/* <Header
         isMobile={isMobile}
         title={site?.title || ''}
         customerIcon={isDify() ? difyIcon : ''}
         theme={themeBuilder?.theme}
         onCreateNewChat={handleNewConversation}
-      />
-      <div className='flex bg-white overflow-hidden'>
-        <div className={cn('h-[100vh] grow flex flex-col overflow-y-auto', isMobile && '!h-[calc(100vh_-_3rem)]')}>
+      /> */}
+      <div className='flex bg-white overflow-hidden '>
+        <div className={cn('h-[100vh] grow flex flex-col bg-chatbot-bg overflow-y-auto ')}>
           {showConfigPanelBeforeChat && !appChatListDataLoading && !appPrevChatList.length && (
             <div className={cn('flex w-full items-center justify-center h-full tablet:px-4', isMobile && 'px-4')}>
               <ConfigPanel />
@@ -84,19 +85,19 @@ const Chatbot = () => {
             <Loading type='app' />
           )}
           {chatReady && !appChatListDataLoading && (
-            <div className='relative h-full pt-8 mx-auto w-full max-w-[720px]'>
-              {!isMobile && (
-                <div className='absolute top-2.5 right-3 z-20'>
-                  <Tooltip
-                    popupContent={t('share.chat.resetChat')}
-                  >
-                    <div className='p-1.5 bg-white border-[0.5px] border-gray-100 rounded-lg shadow-md cursor-pointer' onClick={handleNewConversation}>
-                      <RiLoopLeftLine className="h-4 w-4 text-gray-500"/>
-                    </div>
-                  </Tooltip>
-                </div>
-              )}
-              <ChatWrapper />
+            <div className='relative h-full mx-auto w-full max-w-[720px]'>
+                {!isMobile && (
+                  <div className='absolute top-2.5 right-3 z-20'>
+                    <Tooltip
+                      popupContent={t('share.chat.resetChat')}
+                    >
+                      <div className='p-1.5 bg-white border-[0.5px] border-gray-100 rounded-lg shadow-md cursor-pointer' onClick={handleNewConversation}>
+                        <RiLoopLeftLine className="h-4 w-4 text-gray-500"/>
+                      </div>
+                    </Tooltip>
+                  </div>
+                )}  
+                <ChatWrapper />
             </div>
           )}
         </div>
