@@ -118,7 +118,6 @@ const ChatWrapper = () => {
               <ConfigPanel />
               <div
                 className='my-6 h-[1px]'
-                style={{ background: 'linear-gradient(90deg, rgba(242, 244, 247, 0.00) 0%, #F2F4F7 49.17%, rgba(242, 244, 247, 0.00) 100%)' }}
               />
             </div>
           )}

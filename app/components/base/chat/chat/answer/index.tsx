@@ -23,6 +23,8 @@ import { ChevronRight } from '@/app/components/base/icons/src/vender/line/arrows
 import cn from '@/utils/classnames'
 import { FileList } from '@/app/components/base/file-uploader'
 
+import "./index.css"
+
 type AnswerProps = {
   item: ChatItem
   question: string
@@ -110,11 +112,11 @@ const Answer: FC<AnswerProps> = ({
           </div>
         )}
       </div>
-      <div className='chat-answer-container group grow w-0 ml-4' ref={containerRef}>
+      <div className='chat-answer-container group grow w-0 ml-3' ref={containerRef}>
         <div className={cn('group relative pr-10', chatAnswerContainerInner)}>
           <div
             ref={contentRef}
-            className={cn('relative inline-block px-4 py-3 max-w-full bg-chat-bubble-bg rounded-2xl body-lg-regular text-text-primary', workflowProcess && 'w-full')}
+            className={cn('relative inline-block px-4 py-3 max-w-full bg-chat-bubble-bg answer-chatting body-lg-regular text-text-primary shadow-sm', workflowProcess && 'w-full')}
           >
             {
               !responding && (
