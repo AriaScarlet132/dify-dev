@@ -9,7 +9,7 @@ import {
 import Button from '@/app/components/base/button'
 import Recorder from 'js-audio-recorder'
 import { useRafInterval } from 'ahooks'
-import { convertToMp3 } from './utils'
+import { convertToMP3, convertToMp3 } from './utils'
 import s from './index.module.css'
 import cn from '@/utils/classnames'
 import { audioToText } from '@/service/share'
@@ -43,6 +43,70 @@ const VoiceInput = forwardRef(({
   const clearInterval = useRafInterval(() => {
     setOriginDuration(originDuration + 1)
   }, 1000)
+
+  // 原生api
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm; codecs=opus'});
+      mediaRecorderRef.current = mediaRecorder;
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          chunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorderRef.current.onstop = async () => {
+        const audioBlob = new Blob(chunksRef.current, { type: "audio/webm; codecs=opus" });
+        const audioContext = new window.AudioContext();
+        const arrayBuffer = await audioBlob.arrayBuffer();
+        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+        const mp3Blob = convertToMP3(audioBuffer, audioContext)
+        const mp3File = new File([mp3Blob], 'temp.mp3', { type: 'audio/mp3' })
+        const formData = new FormData()
+        formData.append('file', mp3File)
+        formData.append('word_timestamps', wordTimestamps || 'disabled')
+        let url = ''
+        let isPublic = false
+
+        if (params.token) {
+          url = '/audio-to-text'
+          isPublic = true
+        }
+        else if (params.appId) {
+          if (pathname.search('explore/installed') > -1)
+            url = `/installed-apps/${params.appId}/audio-to-text`
+          else
+            url = `/apps/${params.appId}/audio-to-text`
+        }
+      
+        try {
+          const audioResponse = await audioToText(url, isPublic, formData)
+          onConverted(audioResponse.text)
+          onCancel()
+        }
+        catch (e) {
+          onConverted('')
+          onCancel()
+        }
+      }
+
+      mediaRecorder.start();
+      console.log("Recording started...");
+    } catch (error) {
+      console.error("Failed to start recording:", error);
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop()
+    }
+  };
 
   const drawRecord = useCallback(() => {
     drawRecordId.current = requestAnimationFrame(drawRecord)
@@ -78,54 +142,26 @@ const VoiceInput = forwardRef(({
     ctx.closePath()
   }, [])
   const handleStopRecorder = useCallback(async () => {
-    console.log('chufa')
     clearInterval()
     setStartRecord(false)
     setStartConvert(true)
     recorder.current.stop()
+    stopRecording()
     drawRecordId.current && cancelAnimationFrame(drawRecordId.current)
     drawRecordId.current = null
     const canvas = canvasRef.current!
     const ctx = ctxRef.current!
     ctx.clearRect(0, 0, canvas.width, canvas.height)
-    const mp3Blob = convertToMp3(recorder.current)
-    const mp3File = new File([mp3Blob], 'temp.mp3', { type: 'audio/mp3' })
-    const formData = new FormData()
-    formData.append('file', mp3File)
-    formData.append('word_timestamps', wordTimestamps || 'disabled')
-
-    let url = ''
-    let isPublic = false
-
-    if (params.token) {
-      url = '/audio-to-text'
-      isPublic = true
-    }
-    else if (params.appId) {
-      if (pathname.search('explore/installed') > -1)
-        url = `/installed-apps/${params.appId}/audio-to-text`
-      else
-        url = `/apps/${params.appId}/audio-to-text`
-    }
-
-    try {
-      const audioResponse = await audioToText(url, isPublic, formData)
-      onConverted(audioResponse.text)
-      onCancel()
-    }
-    catch (e) {
-      onConverted('')
-      onCancel()
-    }
   }, [clearInterval, onCancel, onConverted, params.appId, params.token, pathname, wordTimestamps])
   const handleStartRecord = async () => {
     try {
       await recorder.current.start()
+      startRecording()
       setStartRecord(true)
       setStartConvert(false)
 
-      if (canvasRef.current && ctxRef.current)
-        drawRecord()
+      // if (canvasRef.current && ctxRef.current)
+        // drawRecord()
     }
     catch (e) {
       onCancel()
@@ -138,8 +174,6 @@ const VoiceInput = forwardRef(({
 
     if (canvas) {
       const { width: cssWidth, height: cssHeight } = canvas.getBoundingClientRect()
-
-      console.log(dpr,cssWidth)
       canvas.width = dpr * cssWidth
       canvas.height = dpr * cssHeight
       canvasRef.current = canvas
@@ -217,6 +251,7 @@ const VoiceInput = forwardRef(({
                 </Button>
               )
             }
+            <div id="waveSurfer" style={{ display: 'none' }}></div>
             <canvas id='voice-input-record' className='absolute top-0 bottom-0 right-0 left-0  w-full h-full z-0' />
          </div>
       </div>
