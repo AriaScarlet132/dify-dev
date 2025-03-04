@@ -4,12 +4,12 @@ import { useParams, usePathname } from 'next/navigation'
 import {
   RiCloseLine,
   RiLoader2Line,
-  RiStopCircleLine
+  RiStopCircleLine,
 } from '@remixicon/react'
 import Button from '@/app/components/base/button'
 import Recorder from 'js-audio-recorder'
 import { useRafInterval } from 'ahooks'
-import { convertToMP3, convertToMp3 } from './utils'
+import { convertToMP3 } from './utils'
 import s from './index.module.css'
 import cn from '@/utils/classnames'
 import { audioToText } from '@/service/share'
@@ -45,26 +45,25 @@ const VoiceInput = forwardRef(({
   }, 1000)
 
   // 原生api
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const chunksRef = useRef<Blob[]>([]);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
+  const chunksRef = useRef<Blob[]>([])
 
   const startRecording = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm; codecs=opus'});
-      mediaRecorderRef.current = mediaRecorder;
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm; codecs=opus' })
+      mediaRecorderRef.current = mediaRecorder
 
       mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          chunksRef.current.push(event.data);
-        }
-      };
+        if (event.data.size > 0)
+          chunksRef.current.push(event.data)
+      }
 
       mediaRecorderRef.current.onstop = async () => {
-        const audioBlob = new Blob(chunksRef.current, { type: "audio/webm; codecs=opus" });
-        const audioContext = new window.AudioContext();
-        const arrayBuffer = await audioBlob.arrayBuffer();
-        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+        const audioBlob = new Blob(chunksRef.current, { type: 'audio/webm; codecs=opus' })
+        const audioContext = new window.AudioContext()
+        const arrayBuffer = await audioBlob.arrayBuffer()
+        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer)
         const mp3Blob = convertToMP3(audioBuffer, audioContext)
         const mp3File = new File([mp3Blob], 'temp.mp3', { type: 'audio/mp3' })
         const formData = new FormData()
@@ -83,30 +82,29 @@ const VoiceInput = forwardRef(({
           else
             url = `/apps/${params.appId}/audio-to-text`
         }
-      
         try {
           const audioResponse = await audioToText(url, isPublic, formData)
           onConverted(audioResponse.text)
           onCancel()
         }
+        // eslint-disable-next-line unused-imports/no-unused-vars
         catch (e) {
           onConverted('')
           onCancel()
         }
       }
-
-      mediaRecorder.start();
-      console.log("Recording started...");
-    } catch (error) {
-      console.error("Failed to start recording:", error);
+      mediaRecorder.start()
+      console.log('Recording started...')
     }
-  };
+    catch (error) {
+      console.error('Failed to start recording:', error)
+    }
+  }
 
   const stopRecording = () => {
-    if (mediaRecorderRef.current) {
+    if (mediaRecorderRef.current)
       mediaRecorderRef.current.stop()
-    }
-  };
+  }
 
   const drawRecord = useCallback(() => {
     drawRecordId.current = requestAnimationFrame(drawRecord)
@@ -152,7 +150,7 @@ const VoiceInput = forwardRef(({
     const canvas = canvasRef.current!
     const ctx = ctxRef.current!
     ctx.clearRect(0, 0, canvas.width, canvas.height)
-  }, [clearInterval, onCancel, onConverted, params.appId, params.token, pathname, wordTimestamps])
+  }, [clearInterval])
   const handleStartRecord = async () => {
     try {
       await recorder.current.start()
@@ -161,7 +159,7 @@ const VoiceInput = forwardRef(({
       setStartConvert(false)
 
       // if (canvasRef.current && ctxRef.current)
-        // drawRecord()
+      // drawRecord()
     }
     catch (e) {
       onCancel()
@@ -196,7 +194,7 @@ const VoiceInput = forwardRef(({
     return () => {
       recorderRef?.stop()
     }
-  }, [])
+  })
 
   const minutes = Number.parseInt(`${Number.parseInt(`${originDuration}`) / 60}`)
   const seconds = Number.parseInt(`${originDuration}`) % 60
@@ -205,55 +203,55 @@ const VoiceInput = forwardRef(({
     <div className={cn(s.wrapper, 'absolute inset-0 rounded-xl overflow-hidden mx-2')}>
       <div className='absolute inset-[1.5px] pl-3  bg-primary-25 rounded-[10.5px] overflow-hidden'>
         <div className="flex items-center w-full relative h-full">
+          {
+            startConvert && <RiLoader2Line className='animate-spin mr-2 w-6 h-6 text-primary-700' />
+          }
+          <div className='grow z-20'>
             {
-              startConvert && <RiLoader2Line className='animate-spin mr-2 w-6 h-6 text-primary-700' />
-            }
-            <div className='grow z-20'>
-              {
-                startRecord && (
-                  <div className='text-sm text-gray-500 '>
-                    {t('common.voiceInput.speaking')}
-                  </div>
-                )
-              }
-              {
-                startConvert && (
-                  <div className={cn(s.convert, 'text-sm')}>
-                    {t('common.voiceInput.converting')}
-                  </div>
-                )
-              }
-            </div>
-
-            {
-              startConvert && (
-                <div
-                  className='flex justify-center items-center mr-1 w-8 h-8 z-20 hover:bg-gray-200 rounded-lg  cursor-pointer'
-                  onClick={onCancel}
-                >
-                  <RiCloseLine className='w-6 h-6 text-gray-500' />
+              startRecord && (
+                <div className='text-sm text-gray-500 '>
+                  {t('common.voiceInput.speaking')}
                 </div>
               )
             }
-
-            <div className={`w-[45px] pl-1 text-xs z-20 font-medium ${originDuration > 500 ? 'text-[#F04438]' : 'text-gray-700'}`}>{`0${minutes.toFixed(0)}:${seconds >= 10 ? seconds : `0${seconds}`}`}</div>
-
             {
-              startRecord && (
-
-                <Button
-                  className='mx-2 px-2 z-20 flex items-center gap-1'
-                  variant='primary'
-                  onClick={handleStopRecorder}
-                >
-                  <RiStopCircleLine className='w-5 h-5 text-white ' />
-                  <span>完成</span>
-                </Button>
+              startConvert && (
+                <div className={cn(s.convert, 'text-sm')}>
+                  {t('common.voiceInput.converting')}
+                </div>
               )
             }
-            <div id="waveSurfer" style={{ display: 'none' }}></div>
-            <canvas id='voice-input-record' className='absolute top-0 bottom-0 right-0 left-0  w-full h-full z-0' />
-         </div>
+          </div>
+
+          {
+            startConvert && (
+              <div
+                className='flex justify-center items-center mr-1 w-8 h-8 z-20 hover:bg-gray-200 rounded-lg  cursor-pointer'
+                onClick={onCancel}
+              >
+                <RiCloseLine className='w-6 h-6 text-gray-500' />
+              </div>
+            )
+          }
+
+          <div className={`w-[45px] pl-1 text-xs z-20 font-medium ${originDuration > 500 ? 'text-[#F04438]' : 'text-gray-700'}`}>{`0${minutes.toFixed(0)}:${seconds >= 10 ? seconds : `0${seconds}`}`}</div>
+
+          {
+            startRecord && (
+
+              <Button
+                className='mx-2 px-2 z-20 flex items-center gap-1'
+                variant='primary'
+                onClick={handleStopRecorder}
+              >
+                <RiStopCircleLine className='w-5 h-5 text-white ' />
+                <span>完成</span>
+              </Button>
+            )
+          }
+          <div id="waveSurfer" style={{ display: 'none' }}></div>
+          <canvas id='voice-input-record' className='absolute top-0 bottom-0 right-0 left-0  w-full h-full z-0' />
+        </div>
       </div>
     </div>
   )
