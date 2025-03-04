@@ -9,7 +9,7 @@ import {
 import Button from '@/app/components/base/button'
 import Recorder from 'js-audio-recorder'
 import { useRafInterval } from 'ahooks'
-import { convertToMP3 } from './utils'
+import { convertMP4ToMP3, convertWavToMP3, downloadFile, isSafariOriOS } from './utils'
 import s from './index.module.css'
 import cn from '@/utils/classnames'
 import { audioToText } from '@/service/share'
@@ -51,7 +51,14 @@ const VoiceInput = forwardRef(({
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-      const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm; codecs=opus' })
+      let mimeType
+      if(isSafariOriOS()) {
+        mimeType = 'audio/mp4'
+      } else {
+        mimeType = 'audio/webm; codecs=opus'
+      }
+      console.log('[MimeType]:', 'using ' + mimeType)
+      const mediaRecorder = new MediaRecorder(stream, { mimeType: mimeType })
       mediaRecorderRef.current = mediaRecorder
 
       mediaRecorder.ondataavailable = (event) => {
@@ -60,12 +67,19 @@ const VoiceInput = forwardRef(({
       }
 
       mediaRecorderRef.current.onstop = async () => {
-        const audioBlob = new Blob(chunksRef.current, { type: 'audio/webm; codecs=opus' })
+        const audioBlob = new Blob(chunksRef.current, { type: mimeType })
         const audioContext = new window.AudioContext()
         const arrayBuffer = await audioBlob.arrayBuffer()
         const audioBuffer = await audioContext.decodeAudioData(arrayBuffer)
-        const mp3Blob = convertToMP3(audioBuffer, audioContext)
+        let mp3Blob
+        if(mimeType === 'audio/mp4') {
+          mp3Blob = convertMP4ToMP3(audioBuffer, audioContext)
+        }else {
+          mp3Blob = convertWavToMP3(audioBuffer, audioContext)
+        }
+        
         const mp3File = new File([mp3Blob], 'temp.mp3', { type: 'audio/mp3' })
+
         const formData = new FormData()
         formData.append('file', mp3File)
         formData.append('word_timestamps', wordTimestamps || 'disabled')
@@ -102,6 +116,7 @@ const VoiceInput = forwardRef(({
   }
 
   const stopRecording = () => {
+    console.log('Recording stop...')
     if (mediaRecorderRef.current)
       mediaRecorderRef.current.stop()
   }
@@ -143,7 +158,7 @@ const VoiceInput = forwardRef(({
     clearInterval()
     setStartRecord(false)
     setStartConvert(true)
-    recorder.current.stop()
+    // recorder.current.stop()
     stopRecording()
     drawRecordId.current && cancelAnimationFrame(drawRecordId.current)
     drawRecordId.current = null
@@ -153,7 +168,7 @@ const VoiceInput = forwardRef(({
   }, [clearInterval])
   const handleStartRecord = async () => {
     try {
-      await recorder.current.start()
+      // await recorder.current.start()
       startRecording()
       setStartRecord(true)
       setStartConvert(false)
@@ -194,7 +209,7 @@ const VoiceInput = forwardRef(({
     return () => {
       recorderRef?.stop()
     }
-  })
+  }, [])
 
   const minutes = Number.parseInt(`${Number.parseInt(`${originDuration}`) / 60}`)
   const seconds = Number.parseInt(`${originDuration}`) % 60
