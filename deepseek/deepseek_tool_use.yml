@@ -1,0 +1,687 @@
+app:
+  description: ''
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: deepseek_tool_use
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/tongyi:0.0.9@8ad93c77ab79b85793b3b154b7e2c6c43f84fe59049d29d2ac20929a5a67e0e7
+kind: app
+version: 0.1.5
+workflow:
+  conversation_variables:
+  - description: ''
+    id: d901fabd-aa36-472b-b002-a262a1f22dd1
+    name: history
+    selector:
+    - conversation
+    - history
+    value: []
+    value_type: array[string]
+  - description: ''
+    id: 1bea0a19-68f5-4913-922b-919ddd3a7ee3
+    name: tool_use_result_newest
+    selector:
+    - conversation
+    - tool_use_result_newest
+    value:
+      tool_code: null
+      tool_result: null
+    value_type: object
+  - description: ''
+    id: 08219b78-876a-449d-86d5-fb4940b53f0e
+    name: tool_use_history
+    selector:
+    - conversation
+    - tool_use_history
+    value: []
+    value_type: array[object]
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        sourceType: start
+        targetType: llm
+      id: 1741663175581-llm
+      source: '1741663175581'
+      sourceHandle: source
+      target: llm
+      targetHandle: target
+      type: custom
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: code
+      id: llm-source-1741673078684-target
+      source: llm
+      sourceHandle: source
+      target: '1741673078684'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: code
+      id: 1741673078684-source-1741673565014-target
+      source: '1741673078684'
+      sourceHandle: source
+      target: '1741673565014'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: if-else
+      id: 1741673565014-source-1741673418366-target
+      source: '1741673565014'
+      sourceHandle: source
+      target: '1741673418366'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: answer
+      id: 1741673078684-fail-branch-1741674246564-target
+      source: '1741673078684'
+      sourceHandle: fail-branch
+      target: '1741674246564'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: answer
+      id: 1741681920964-source-1741680061115-target
+      source: '1741681920964'
+      sourceHandle: source
+      target: '1741680061115'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: code
+        targetType: llm
+      id: 1741681265622-source-1741681920964-target
+      source: '1741681265622'
+      sourceHandle: source
+      target: '1741681920964'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: answer
+      id: 1741673418366-true-answer-target
+      source: '1741673418366'
+      sourceHandle: 'true'
+      target: answer
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: code
+      id: 1741673418366-b751aed1-30b9-4b4a-aab5-eecbabf7afd8-1741681265622-target
+      source: '1741673418366'
+      sourceHandle: b751aed1-30b9-4b4a-aab5-eecbabf7afd8
+      target: '1741681265622'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: if-else
+        targetType: knowledge-retrieval
+      id: 1741673418366-c4a50e7b-789f-4f2b-9ebc-4a349d28b88e-1741685907035-target
+      source: '1741673418366'
+      sourceHandle: c4a50e7b-789f-4f2b-9ebc-4a349d28b88e
+      target: '1741685907035'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: knowledge-retrieval
+        targetType: llm
+      id: 1741685907035-source-1741685918618-target
+      source: '1741685907035'
+      sourceHandle: source
+      target: '1741685918618'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: answer
+      id: 1741685918618-source-1741685960568-target
+      source: '1741685918618'
+      sourceHandle: source
+      target: '1741685960568'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 开始
+        type: start
+        variables: []
+      height: 53
+      id: '1741663175581'
+      position:
+        x: -48.841483367826356
+        y: 282
+      positionAbsolute:
+        x: -48.841483367826356
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - sys
+          - query
+        desc: ''
+        memory:
+          query_prompt_template: '{{#sys.query#}}'
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 10
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: deepseek-r1-distill-qwen-32b
+          provider: langgenius/tongyi/tongyi
+        prompt_template:
+        - id: 8987d6be-41d3-4383-b41e-78c217e6112c
+          role: system
+          text: "### **角色定义**\n你是一个智能小助手，能够创建**报事报修**和**跑腿代买**的工单，查询工单状态，以及从知识库中获取跟dify相关的知识进行回答\n\
+            ### **工具定义**\n- { \"code\": \"create_ticket\", \"params\": {{summary}},\
+            \ \"description\": \"创建工单的工具\" }\n- { \"code\": \"query_ticket\", \"params\"\
+            : null, \"description\": \"查询工单进度的工具\" }\n- { \"code\": \"query_knowledge_base\"\
+            , \"params\": null, \"description\": \"查询知识库\" }\n### **创建工单要求**\n- 对于**报事报修**的工单，需要\n\
+            \  1. 位置，例如客厅、厨房等\n  2. 物件，例如天花板、灯泡等\n  3. 现象，例如开裂、漏水等\n  4. 将上述信息进行简单摘要，作为{{summary}}的参数\n\
+            - 对于**跑腿代送**的工单，需要\n  1. 分类，**代取快递**或者**代购**\n  2. 时间，送货上门的具体时间\n  3.\
+            \ 联系电话\n  4. 将上述信息进行简单摘要，作为{{summary}}的参数\n### **关键步骤**\n- 分析用户需求，问答可以直接根据系统提示回答\n\
+            - 如果涉及工单，继续用对话引导用户获取足够的参数\n- 当参数满足需求，调用工具获取结果\n- 根据工具返回结果给用户友好的回应\n- 仔细检查，确保返回结果的格式符合要求\n\
+            ### **回复格式**\n- 有效的{{TOOL_CODE}}为: {{FINAL_ANSWER}}或者工具定义的{{code}}\n-\
+            \ 你每轮**只能采取一次行动**，行动用带有{{TOOL_CODE}}和{{TOOL_INPUT}}的JSON blob的格式表示\n-\
+            \ 根据行动和返回的结果，判断是对话回复(FINAL_ANSWER)还是尝试调用工具\n- 你的回复需要**严格**按照下面的格式:\n\n\
+            ```json\n{\n\"TOOL_CODE\": $code,\n\"TOOL_INPUT\": $params\n}\n```\n###\
+            \ 对话示例\n- user: \"我家的灯坏了\"  \n- assistant:  \n```json\n{\n\"TOOL_CODE\"\
+            : \"FINAL_ANSWER\",\n\"TOOL_INPUT\": \"请问灯具体位于哪个房间？例如客厅、厨房等。\"\n}\n```\n\
+            - user: \"客厅\"  \n- assistant:  \n```json\n{\n\"TOOL_CODE\": \"FINAL_ANSWER\"\
+            ,\n\"TOOL_INPUT\": \"请问具体是哪个物件出现问题？例如灯泡、灯具、开关等。\"\n}\n```  \n- user: \"\
+            灯泡\"  \n- assistant:  \n```json\n{\n \"TOOL_CODE\": \"FINAL_ANSWER\",\n\
+            \ \"TOOL_INPUT\": \"灯泡出现了什么问题？例如不亮、闪烁、松动等。\"\n}\n```  \n- user: \"不亮\"\
+            \  \n- assistant:  \n```json\n{\n \"TOOL_CODE\": \"create_ticket\",\n\
+            \ \"TOOL_INPUT\": \"客厅的灯泡不亮\"\n}\n```"
+        selected: false
+        title: LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 89
+      id: llm
+      position:
+        x: 313.874264377688
+        y: 282
+      positionAbsolute:
+        x: 313.874264377688
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        answer: '{{#1741673565014.TOOL_INPUT#}}'
+        desc: ''
+        selected: false
+        title: 直接回复
+        type: answer
+        variables: []
+      height: 102
+      id: answer
+      position:
+        x: 2116.485970449526
+        y: 85.47093449202019
+      positionAbsolute:
+        x: 2116.485970449526
+        y: 85.47093449202019
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: "import re\nimport json\n\n\ndef main(llm_output: str) -> dict:\n  \
+          \  # 使用正则表达式匹配JSON代码块\n    pattern = r'```json\\n(.*?)```'\n    match =\
+          \ re.search(pattern, llm_output, re.DOTALL)\n\n    if match:\n        json_str\
+          \ = match.group(1)\n        # 解析JSON字符串\n        return {\n            \"\
+          response\": json.loads(json_str)\n        }\n    else:\n        pattern\
+          \ = r'json\\n(.*?)```'\n        match = re.search(pattern, llm_output, re.DOTALL)\n\
+          \        if match:\n            json_str = match.group(1)\n        # 解析JSON字符串\n\
+          \            return {\n                \"response\": json.loads(json_str)\n\
+          \            }\n        else:\n            raise ValueError(\"未找到有效的JSON响应部分\"\
+          )\n"
+        code_language: python3
+        desc: 提取大模型的响应
+        error_strategy: fail-branch
+        outputs:
+          response:
+            children: null
+            type: object
+        selected: false
+        title: 代码执行
+        type: code
+        variables:
+        - value_selector:
+          - llm
+          - text
+          variable: llm_output
+      height: 117
+      id: '1741673078684'
+      position:
+        x: 650.4012808479317
+        y: 282
+      positionAbsolute:
+        x: 650.4012808479317
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            id: 30f61e06-d741-4cc6-a378-e5dd63e34fad
+            value: FINAL_ANSWER
+            varType: string
+            variable_selector:
+            - '1741673565014'
+            - TOOL_CODE
+          id: 'true'
+          logical_operator: and
+        - case_id: b751aed1-30b9-4b4a-aab5-eecbabf7afd8
+          conditions:
+          - comparison_operator: is
+            id: 79c61b78-055f-449f-8497-ad7b1bf180a5
+            value: create_ticket
+            varType: string
+            variable_selector:
+            - '1741673565014'
+            - TOOL_CODE
+          id: b751aed1-30b9-4b4a-aab5-eecbabf7afd8
+          logical_operator: or
+        - case_id: c4a50e7b-789f-4f2b-9ebc-4a349d28b88e
+          conditions:
+          - comparison_operator: is
+            id: 27beb341-51cb-4f93-a7bd-71ad38239534
+            value: query_knowledge_base
+            varType: string
+            variable_selector:
+            - '1741673565014'
+            - TOOL_CODE
+          id: c4a50e7b-789f-4f2b-9ebc-4a349d28b88e
+          logical_operator: and
+        desc: ''
+        selected: false
+        title: 条件分支 2
+        type: if-else
+      height: 221
+      id: '1741673418366'
+      position:
+        x: 1576.270873284071
+        y: 101.97433406060554
+      positionAbsolute:
+        x: 1576.270873284071
+        y: 101.97433406060554
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: "\ndef main(response: dict) -> dict:\n    return {\n        \"TOOL_CODE\"\
+          : response['TOOL_CODE'],\n        \"TOOL_INPUT\": response['TOOL_INPUT']\n\
+          \    }\n"
+        code_language: python3
+        desc: 从提取的对象中再提取参数
+        outputs:
+          TOOL_CODE:
+            children: null
+            type: string
+          TOOL_INPUT:
+            children: null
+            type: string
+        selected: false
+        title: 代码执行 2
+        type: code
+        variables:
+        - value_selector:
+          - '1741673078684'
+          - response
+          variable: response
+      height: 81
+      id: '1741673565014'
+      position:
+        x: 1187.334791519575
+        y: 155.69142597486663
+      positionAbsolute:
+        x: 1187.334791519575
+        y: 155.69142597486663
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        answer: '{{#llm.text#}}'
+        desc: ''
+        selected: false
+        title: 直接回复 2
+        type: answer
+        variables: []
+      height: 102
+      id: '1741674246564'
+      position:
+        x: 1174.6991096146076
+        y: 385.5143040714173
+      positionAbsolute:
+        x: 1174.6991096146076
+        y: 385.5143040714173
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        answer: '{{#1741681920964.text#}}'
+        desc: ''
+        selected: false
+        title: 直接回复 3
+        type: answer
+        variables: []
+      height: 102
+      id: '1741680061115'
+      position:
+        x: 2794.105855546493
+        y: 229.2824091984702
+      positionAbsolute:
+        x: 2794.105855546493
+        y: 229.2824091984702
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        code: "import random\n\n\ndef main(code: str, tool_input: str) -> dict:\n\
+          \    return {\n        \"result\": random.randint(10**15, 10**16 - 1)\n\
+          \    }\n"
+        code_language: python3
+        desc: ''
+        outputs:
+          result:
+            children: null
+            type: number
+        selected: false
+        title: 模拟调用http
+        type: code
+        variables:
+        - value_selector:
+          - '1741673565014'
+          - TOOL_CODE
+          variable: code
+        - value_selector:
+          - '1741673565014'
+          - TOOL_INPUT
+          variable: tool_input
+      height: 53
+      id: '1741681265622'
+      position:
+        x: 2116.485970449526
+        y: 229.2824091984702
+      positionAbsolute:
+        x: 2116.485970449526
+        y: 229.2824091984702
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: deepseek-r1-distill-qwen-32b
+          provider: langgenius/tongyi/tongyi
+        prompt_template:
+        - id: 18da1098-7519-41d5-a00e-e290fa0500a9
+          role: system
+          text: '### **字段定义**
+
+            - create_ticket，创建工单
+
+            - query_ticket，查询工单
+
+
+            ### **工具调用详情**
+
+            - 调用参数: {{#1741673565014.TOOL_INPUT#}}
+
+            - 调用结果: {{#1741681265622.result#}}
+
+
+            ### **职责**
+
+            你需要根据工具调用结果和字段定义，给用户友好的回复，例如:
+
+            "您的工单已受理，内容为{{TOOL_INPUT}}，工单号{{result}}，我们会尽快安排人员处理！"
+
+
+            ### **注意事项**
+
+            回复之前，仔细检查回复格式是否正确'
+        selected: false
+        title: 工具结果LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 89
+      id: '1741681920964'
+      position:
+        x: 2443.563127926623
+        y: 229.2824091984702
+      positionAbsolute:
+        x: 2443.563127926623
+        y: 229.2824091984702
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        dataset_ids:
+        - 0eca7783-e77e-41cd-a9fe-6ceab01b0bc7
+        desc: ''
+        multiple_retrieval_config:
+          reranking_enable: false
+          reranking_mode: reranking_model
+          reranking_model:
+            model: gte-rerank
+            provider: langgenius/tongyi/tongyi
+          score_threshold: null
+          top_k: 4
+          weights:
+            keyword_setting:
+              keyword_weight: 0
+            vector_setting:
+              embedding_model_name: text-embedding-v2
+              embedding_provider_name: langgenius/tongyi/tongyi
+              vector_weight: 1
+        query_variable_selector:
+        - '1741663175581'
+        - sys.query
+        retrieval_mode: multiple
+        selected: false
+        title: 知识检索
+        type: knowledge-retrieval
+      height: 91
+      id: '1741685907035'
+      position:
+        x: 2116.485970449526
+        y: 424.3511357211771
+      positionAbsolute:
+        x: 2116.485970449526
+        y: 424.3511357211771
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1741685907035'
+          - result
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: deepseek-r1-distill-qwen-32b
+          provider: langgenius/tongyi/tongyi
+        prompt_template:
+        - id: 7f1ced33-eb09-4375-b5e9-32ef1cf5ace3
+          role: system
+          text: '根据下列知识库中获取的内容，回答用户的问题:
+
+            {{#context#}}
+
+            **注意事项**
+
+            回复之前，仔细检查回复格式是否正确，例如标签是否闭合'
+        - id: ee1b2bf3-3a15-43f4-8df9-e9ee2f0d40d7
+          role: user
+          text: '{{#sys.query#}}'
+        selected: false
+        title: 知识库LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 89
+      id: '1741685918618'
+      position:
+        x: 2443.563127926623
+        y: 424.3511357211771
+      positionAbsolute:
+        x: 2443.563127926623
+        y: 424.3511357211771
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        answer: '{{#1741685918618.text#}}'
+        desc: ''
+        selected: false
+        title: 直接回复 4
+        type: answer
+        variables: []
+      height: 102
+      id: '1741685960568'
+      position:
+        x: 2794.105855546493
+        y: 424.3511357211771
+      positionAbsolute:
+        x: 2794.105855546493
+        y: 424.3511357211771
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    viewport:
+      x: -864.2814547344558
+      y: 100.32092741625314
+      zoom: 0.5743491774985183
